@@ -8,15 +8,6 @@
   trigger:
     platform: time
     at: '22:00:00'
-  condition:
-    condition: time
-    weekday:
-        - mon
-        - tue
-        - wed
-        - thu
-        - fri
-        - sat
   action:
     service: lock.lock
     entity_id: lock.lock_back_door_lock
@@ -30,44 +21,42 @@
     service: lock.lock
     entity_id: lock.lock_back_door_lock
 
-- id: 'lock_after_10_mins_when_after_10pm_or_before_4pm_back_door'
-  alias: 'Weekday Lock Schedule back door'
+- id: 'lock_after_5_mins_back_door'
+  alias: 'Lock Schedule Back Door'
   trigger:
     platform: state
     entity_id: lock.lock_back_door_lock
     to: 'unlocked'
     for:
-      minutes: 10
+      minutes: 5
   condition:
     condition: time
-    after: '22:00:00'
-    before: '16:30:00'
     weekday:
         - mon
         - tue
         - wed
-        - thu
         - fri
         - sat
+        - sun
   action:
     service: lock.lock
     entity_id: lock.lock_back_door_lock
     
 
-- id: 'lock_after_10_mins_when_between_midnight_11am_back_door'
-  alias: 'Sunday Lock Schedule back door'
+- id: 'lock_after_5_mins_before_6pm_after_11pm_back_door'
+  alias: 'HomeChurch Lock Schedule back door'
   trigger:
     platform: state
     entity_id: lock.lock_back_door_lock
     to: 'unlocked'
     for:
-      minutes: 10
+      minutes: 5
   condition:
     condition: time
-    after: '00:00:00'
-    before: '11:00:00'
+    after: '23:00:00'
+    before: '17:00:00'
     weekday:
-        - sun
+        - thu
   action:
     service: lock.lock
     entity_id: lock.lock_back_door_lock
@@ -78,15 +67,6 @@
   trigger:
     platform: time
     at: '22:00:00'
-  condition:
-    condition: time
-    weekday:
-        - mon
-        - tue
-        - wed
-        - thu
-        - fri
-        - sat
   action:
     service: lock.lock
     entity_id: lock.lock_front_door_lock    
@@ -101,46 +81,42 @@
     entity_id: lock.lock_front_door_lock        
 
     
-- id: 'lock_after_10_mins_when_after_10pm_or_before_4pm_front_door'
-  alias: 'Weekday Lock Schedule front door'
+- id: 'lock_after_5_mins_when_after_10pm_or_before_4pm_front_door'
+  alias: 'Lock Schedule front door'
   trigger:
     platform: state
     entity_id: lock.lock_front_door_lock
     to: 'unlocked'
     for:
-      minutes: 10
+      minutes: 5
   condition:
     condition: time
-    after: '22:00:00'
-    before: '16:30:00'
     weekday:
         - mon
         - tue
         - wed
-        - thu
         - fri
         - sat
-  action:
-    service: lock.lock
-    entity_id: lock.lock_front_door_lock
-    
-- id: 'lock_after_10_mins_when_between_midnight_11am_front_door'
-  alias: 'Sunday Lock Schedule front door'
-  trigger:
-    platform: state
-    entity_id: lock.lock_front_door_lock
-    to: 'unlocked'
-    for:
-      minutes: 10
-  condition:
-    condition: time
-    after: '00:00:00'
-    before: '11:00:00'
-    weekday:
         - sun
   action:
     service: lock.lock
     entity_id: lock.lock_front_door_lock
     
-
-
+- id: 'lock_after_5_mins_before_6pm_after_11pm_front_door'
+  alias: 'HomeChurch Lock Schedule front door'
+  trigger:
+    platform: state
+    entity_id: lock.lock_front_door_lock
+    to: 'unlocked'
+    for:
+      minutes: 5
+  condition:
+    condition: time
+    after: '23:00:00'
+    before: '17:00:00'
+    weekday:
+        - thu
+  action:
+    service: lock.lock
+    entity_id: lock.lock_front_door_lock
+    
