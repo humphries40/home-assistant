@@ -1,58 +1,39 @@
+
+
 #################################################################
-# Rename your Entity ID's Names for the lock, alarm type & level#
-# zwave.lock_front_door_deadbolt, zwave.lock_back_door_deadbolt #
-# lock.lock_front_door_lock, lock.lock_back_door_lock           #
+# Names in needed in entity registry:                           #
+# zwave.lock_front_door_deadbolt                                #
+# lock.lock_front_door_lock                                     #
 # sensor.lock_front_door_deadbolt_alarm_type,                   #
 # sensor.lock_front_door_deadbolt_alarm_level                   #
-# sensor.lock_back_door_deadbolt_alarm_type,                    #
-# sensor.lock_back_door_deadbolt_alarm_level                    #
+# If you have multiple locks like in the package below, name    #
+# accordingly.                                                  #
 # also recommend you use the recorder component in your         #
 # configuration.yaml, as well as the uptime sensor component    #
 # and for notifications I use pushbullet, but replace with      #
-# notifier of your choice.                                      #
+# notifyier of your choice.                                     #
 #################################################################
 automation:
   - alias: Keypad switch turned on
+    initial_state: true
     trigger:
       - platform: state
         to: 'on'
         entity_id:
+# Entities need to be named to match your lock name.  In this case
+# front, back, garage based on "lock.lock_front_door_lock", etc
           - input_boolean.door_keypad_1_front_switch
           - input_boolean.door_keypad_2_front_switch
           - input_boolean.door_keypad_3_front_switch
           - input_boolean.door_keypad_4_front_switch
           - input_boolean.door_keypad_5_front_switch
           - input_boolean.door_keypad_6_front_switch
-          - input_boolean.door_keypad_7_front_switch
-          - input_boolean.door_keypad_8_front_switch
-          - input_boolean.door_keypad_9_front_switch
-          - input_boolean.door_keypad_10_front_switch
-          - input_boolean.door_keypad_11_front_switch
-          - input_boolean.door_keypad_12_front_switch
-          - input_boolean.door_keypad_13_front_switch
-          - input_boolean.door_keypad_14_front_switch
-          - input_boolean.door_keypad_15_front_switch
-          - input_boolean.door_keypad_16_front_switch
-          - input_boolean.door_keypad_17_front_switch
-          - input_boolean.door_keypad_18_front_switch
           - input_boolean.door_keypad_1_back_switch
           - input_boolean.door_keypad_2_back_switch
           - input_boolean.door_keypad_3_back_switch
           - input_boolean.door_keypad_4_back_switch
           - input_boolean.door_keypad_5_back_switch
           - input_boolean.door_keypad_6_back_switch
-          - input_boolean.door_keypad_7_back_switch
-          - input_boolean.door_keypad_8_back_switch
-          - input_boolean.door_keypad_9_back_switch
-          - input_boolean.door_keypad_10_back_switch
-          - input_boolean.door_keypad_11_back_switch
-          - input_boolean.door_keypad_12_back_switch
-          - input_boolean.door_keypad_13_back_switch
-          - input_boolean.door_keypad_14_back_switch
-          - input_boolean.door_keypad_15_back_switch
-          - input_boolean.door_keypad_16_back_switch
-          - input_boolean.door_keypad_17_back_switch
-          - input_boolean.door_keypad_18_back_switch
 
     condition:
       - condition: template
@@ -85,6 +66,7 @@ automation:
             {{ states['input_text'][user_code_id].state }}
 
   - alias: Keypad switch turned off
+    initial_state: true
     trigger:
       - platform: state
         to: 'off'
@@ -95,36 +77,13 @@ automation:
           - input_boolean.door_keypad_4_front_switch
           - input_boolean.door_keypad_5_front_switch
           - input_boolean.door_keypad_6_front_switch
-          - input_boolean.door_keypad_7_front_switch
-          - input_boolean.door_keypad_8_front_switch
-          - input_boolean.door_keypad_9_front_switch
-          - input_boolean.door_keypad_10_front_switch
-          - input_boolean.door_keypad_11_front_switch
-          - input_boolean.door_keypad_12_front_switch
-          - input_boolean.door_keypad_13_front_switch
-          - input_boolean.door_keypad_14_front_switch
-          - input_boolean.door_keypad_15_front_switch
-          - input_boolean.door_keypad_16_front_switch
-          - input_boolean.door_keypad_17_front_switch
-          - input_boolean.door_keypad_18_front_switch
           - input_boolean.door_keypad_1_back_switch
           - input_boolean.door_keypad_2_back_switch
           - input_boolean.door_keypad_3_back_switch
           - input_boolean.door_keypad_4_back_switch
           - input_boolean.door_keypad_5_back_switch
           - input_boolean.door_keypad_6_back_switch
-          - input_boolean.door_keypad_7_back_switch
-          - input_boolean.door_keypad_8_back_switch
-          - input_boolean.door_keypad_9_back_switch
-          - input_boolean.door_keypad_10_back_switch
-          - input_boolean.door_keypad_11_back_switch
-          - input_boolean.door_keypad_12_back_switch
-          - input_boolean.door_keypad_13_back_switch
-          - input_boolean.door_keypad_14_back_switch
-          - input_boolean.door_keypad_15_back_switch
-          - input_boolean.door_keypad_16_back_switch
-          - input_boolean.door_keypad_17_back_switch
-          - input_boolean.door_keypad_18_back_switch
+
     
     condition:
       - condition: template
@@ -142,35 +101,36 @@ automation:
 # Update 9/4/18 - I have updated my openzwave for the locks and the clear usercode now works.  I have commented
 # out the section with the random number.  If you are are using the release version you can uncommoment that section
 # and comment out the clear user code sections
-#      - service: lock.set_usercode
-#        data_template:
-#          usercode: >-
-#            {{ range(1000, 9999) | random }}
-## if your lock does not end in "door_lock" ie. often its "door_locked" change line 3 below to match
-## no other things should need to be changed
-#          node_id: >-
-#            {% set object_id = trigger.to_state.object_id %}
-#            {% set lock_name = "_".join(object_id.split("_")[3:-1]) %}
-#            {% set lock_id = 'lock_' ~ lock_name ~ '_door_lock' %}
-#            {{ states['lock'][lock_id].attributes.node_id }}
-#
-#          code_slot: >-
-#            {% set object_id = trigger.to_state.object_id %}
-#            {% set code_slot = "_".join(object_id.split("_")[2:-2]) %}
-#            {{ code_slot }}
-      - service: lock.clear_usercode
-        data_template:      
+      - service: lock.set_usercode
+        data_template:
+          usercode: >-
+            {{ range(1000, 9999) | random }}
+# if your lock does not end in "door_lock" ie. often its "door_locked" change line 3 below to match
+# no other things should need to be changed
           node_id: >-
             {% set object_id = trigger.to_state.object_id %}
             {% set lock_name = "_".join(object_id.split("_")[3:-1]) %}
             {% set lock_id = 'lock_' ~ lock_name ~ '_door_lock' %}
             {{ states['lock'][lock_id].attributes.node_id }}
+
           code_slot: >-
             {% set object_id = trigger.to_state.object_id %}
             {% set code_slot = "_".join(object_id.split("_")[2:-2]) %}
             {{ code_slot }}
+#      - service: lock.clear_usercode
+#        data_template:      
+#          node_id: >-
+#            {% set object_id = trigger.to_state.object_id %}
+#            {% set lock_name = "_".join(object_id.split("_")[3:-1]) %}
+#            {% set lock_id = 'lock_' ~ lock_name ~ '_door_lock' %}
+#            {{ states['lock'][lock_id].attributes.node_id }}
+#          code_slot: >-
+#            {% set object_id = trigger.to_state.object_id %}
+#            {% set code_slot = "_".join(object_id.split("_")[2:-2]) %}
+#            {{ code_slot }}
 
   - alias: Keypad temporary code start (Front)
+    initial_state: true
     trigger:
       - platform: state
         to: 'True'
@@ -181,15 +141,6 @@ automation:
           - sensor.keypad_4_temp_lock_turn_on
           - sensor.keypad_5_temp_lock_turn_on
           - sensor.keypad_6_temp_lock_turn_on
-          - sensor.keypad_7_temp_lock_turn_on
-          - sensor.keypad_8_temp_lock_turn_on
-          - sensor.keypad_9_temp_lock_turn_on
-          - sensor.keypad_10_temp_lock_turn_on
-          - sensor.keypad_11_temp_lock_turn_on
-          - sensor.keypad_12_temp_lock_turn_on
-          - sensor.keypad_13_temp_lock_turn_on
-          - sensor.keypad_14_temp_lock_turn_on
-          - sensor.keypad_15_temp_lock_turn_on
 # if you changed the name of your switch from "front" change below to match
     condition:
       - condition: template
@@ -217,6 +168,7 @@ automation:
             {{ code_slot }}
 
   - alias: Keypad temporary code start (Back)
+    initial_state: true
     trigger:
       - platform: state
         to: 'True'
@@ -227,15 +179,6 @@ automation:
           - sensor.keypad_4_temp_lock_turn_on
           - sensor.keypad_5_temp_lock_turn_on
           - sensor.keypad_6_temp_lock_turn_on
-          - sensor.keypad_7_temp_lock_turn_on
-          - sensor.keypad_8_temp_lock_turn_on
-          - sensor.keypad_9_temp_lock_turn_on
-          - sensor.keypad_10_temp_lock_turn_on
-          - sensor.keypad_11_temp_lock_turn_on
-          - sensor.keypad_12_temp_lock_turn_on
-          - sensor.keypad_13_temp_lock_turn_on
-          - sensor.keypad_14_temp_lock_turn_on
-          - sensor.keypad_15_temp_lock_turn_on
 # if you changed the name of your switch from "back" change below to match
     condition:
       - condition: template
@@ -261,28 +204,7 @@ automation:
             {% set object_id = trigger.to_state.object_id %}
             {% set code_slot = object_id[7:-18] %}
             {{ code_slot }}
-
-  - alias: Keypad temporary code end
-    trigger:
-      - platform: state
-        to: 'True'
-        entity_id:
-          - sensor.keypad_1_temp_lock_turn_off
-          - sensor.keypad_2_temp_lock_turn_off
-          - sensor.keypad_3_temp_lock_turn_off
-          - sensor.keypad_4_temp_lock_turn_off
-          - sensor.keypad_5_temp_lock_turn_off
-          - sensor.keypad_6_temp_lock_turn_off
-          - sensor.keypad_7_temp_lock_turn_off
-          - sensor.keypad_8_temp_lock_turn_off
-          - sensor.keypad_9_temp_lock_turn_off
-          - sensor.keypad_10_temp_lock_turn_off
-          - sensor.keypad_11_temp_lock_turn_off
-          - sensor.keypad_12_temp_lock_turn_off
-          - sensor.keypad_13_temp_lock_turn_off
-          - sensor.keypad_14_temp_lock_turn_off
-          - sensor.keypad_15_temp_lock_turn_off
-# this is where usercodes get deleted, for the Schlage locks there seems to be an issue with 
+          
 # clear usercode, setting to 0000 works for some locks, but for the schalge it sets 0000 as a
 # valid code, so this sets a random code, of course that means there is an unknown code in the cleared
 # slots.  If you dont like that set a specific code that only you know
@@ -290,43 +212,32 @@ automation:
 # out the section with the random number.  If you are are using the release version you can uncommoment that section
 # and comment out the clear user code sections
     action:
-#      - service: lock.set_usercode
-#        data_template:
-#          usercode: >-
-#            {{ range(1000, 9999) | random }}
-## Front Door Deadbolt.  You must put in the zwave node id's here 
-#          node_id: 82
-#          code_slot: >-
-#            {% set object_id = trigger.to_state.object_id %}
-#            {% set code_slot = object_id[7:-19] %}
-#            {{ code_slot }}
-#         
-#      - service: lock.set_usercode
-#        data_template:
-#          usercode: >-
-#            {{ range(1000, 9999) | random }}
-## Back Door Deadbolt.   You must put in the zwave node id's here 
-#          node_id: 99
-#          code_slot: >-
-#            {% set object_id = trigger.to_state.object_id %}
-#            {% set code_slot = object_id[7:-19] %}
-#            {{ code_slot }}
-      - service: lock.clear_usercode
+      - service: lock.set_usercode
         data_template:
-# Front Door Deadbolt.  You must put in the zwave node id's here         
+          usercode: >-
+            {{ range(1000, 9999) | random }}
+# Front Door Deadbolt.  You must put in the zwave node id's here 
           node_id: 4
           code_slot: >-
             {% set object_id = trigger.to_state.object_id %}
             {% set code_slot = object_id[7:-19] %}
-            {{ code_slot }}   
-      - service: lock.clear_usercode
+            {{ code_slot }}
+         
+      - service: lock.set_usercode
         data_template:
-# Back Door Deadbolt.   You must put in the zwave node id's here         
+          usercode: >-
+            {{ range(1000, 9999) | random }}
+# Back Door Deadbolt.   You must put in the zwave node id's here 
           node_id: 3
           code_slot: >-
             {% set object_id = trigger.to_state.object_id %}
             {% set code_slot = object_id[7:-19] %}
             {{ code_slot }}
+            
+      - service: lock.set_usercode
+        data_template:
+          usercode: >-
+            {{ range(1000, 9999) | random }}
 
       - condition: and
         conditions:
@@ -346,6 +257,7 @@ automation:
             {{ 'script.door_keypad_' ~ code_slot ~ '_delete' }}
 
   - alias: Keypad set random code for one time use
+    initial_state: true
     trigger:
       - platform: state
         to: 'Enabled'
@@ -366,6 +278,7 @@ automation:
           value: '{{ range(1000, 9999) | random }}'
 
   - alias: Keypad clear code after one time use code is used for 16 through 18
+    initial_state: true
 # When the code from slots 16. 17 or 18 are used, this immediately runs the delete script, removing the code from all doors
 # notice that the alarm level is used to determine which slot was used, make sure the names match your config.  Added condition
 # for keypad unlock to keep codes from being deleted when set  (Yale Locks did this)
@@ -396,6 +309,7 @@ automation:
             {{ 'script.door_keypad_' ~ code_slot ~ '_delete' }}
 
   - alias: Keypad clear code after one time use is set to disabled for 16 through 18
+    initial_state: true
 # This will also delete the code from all doors when you change the option from enabled to disabled
     trigger:
       - platform: state
@@ -412,6 +326,8 @@ automation:
                 {% set code_slot = "_".join(object_id.split("_")[3:-2]) %}
                 {% set script_to_run = 'script.door_keypad_' ~ code_slot ~ '_delete' %}
                 {{ script_to_run }}
+
+  
 
   - alias: Set Front Door Lock Options
     trigger:
@@ -509,300 +425,6 @@ automation:
           value: >-
             {{ trigger.to_state.state }}
 
-group:
-# you can choose to hide your main entry codes so they will not show in the UI, but, they are still visible in the States
-# so its not really possible to hide the codes from the UI at this time.
-  keypads:
-    name: Door Lock Information, Codes and Configuration
-    view: yes
-    icon: mdi:lock-smart
-    entities:
-      - group.door_keypad_1
-      - group.door_keypad_2
-      - group.door_keypad_3
-      - group.door_keypad_4
-      - group.door_keypad_5
-      - group.door_keypad_6
-      - group.door_keypad_7
-      - group.door_keypad_8
-      - group.door_keypad_9
-      - group.door_keypad_10
-      - group.door_keypad_11
-      - group.door_keypad_12
-      - group.door_keypad_13
-      - group.door_keypad_14
-      - group.door_keypad_15
-      - group.door_keypad_16
-      - group.door_keypad_17
-      - group.door_keypad_18
-      - group.zwave_front_door_lock_options
-      - group.zwave_back_door_lock_options
-      - group.front_door_info
-      - group.back_door_info
-
-  zwave_front_door_lock_options:
-    name: Front Door Configuration Options
-    view: no
-    entities:
-      - input_select.lock_zwave_option_3_front
-      - input_select.lock_zwave_option_4_front
-      - input_select.lock_zwave_option_5_front
-      - input_select.lock_zwave_option_7_front
-      - input_select.lock_zwave_option_8_front
-      - input_select.lock_zwave_option_9_front
-      - input_select.lock_zwave_option_10_front
-      - input_select.lock_zwave_option_11_front
-      - input_select.lock_zwave_option_15_front
-      - input_select.lock_zwave_option_16_front
-  
-  zwave_back_door_lock_options:
-    name: Back Door Configuration Options
-    view: no
-    entities:
-      - input_select.lock_zwave_option_3_back
-      - input_select.lock_zwave_option_4_back
-      - input_select.lock_zwave_option_5_back
-      - input_select.lock_zwave_option_7_back
-      - input_select.lock_zwave_option_8_back
-      - input_select.lock_zwave_option_9_back
-      - input_select.lock_zwave_option_10_back
-      - input_select.lock_zwave_option_11_back
-      - input_select.lock_zwave_option_15_back
-      - input_select.lock_zwave_option_16_back
-
-  front_door_info:
-    name: Front Door Info
-    view: no
-    entities:    
-      - lock.lock_front_door_lock
-      - sensor.front_door_report
-      - sensor.frontdoor_code
-  
-  back_door_info:
-    name: Back Door Info
-    entities:    
-      - lock.lock_back_door_lock
-      - sensor.back_door_report
-      - sensor.backdoor_code
-  
-# again use the names for your locks if named different
-  door_lock_information:
-    name: Door Locks
-    entities:
-       - lock.lock_back_door_lock
-       - lock.lock_front_door_lock
-
-  door_keypad_1:
-    control: hidden
-    name: Entry Code 1
-    entities:
-      - input_text.door_keypad_1_name
-      - input_text.door_keypad_1_code
-      - input_select.door_keypad_1_access_schedule
-      - input_datetime.door_keypad_1_date_start
-      - input_datetime.door_keypad_1_date_end
-      - input_boolean.door_keypad_1_front_switch
-      - input_boolean.door_keypad_1_back_switch
-      - script.door_keypad_1_delete
-  door_keypad_2:
-    control: hidden
-    name: Entry Code 2
-    entities:
-      - input_text.door_keypad_2_name
-      - input_text.door_keypad_2_code
-      - input_select.door_keypad_2_access_schedule
-      - input_datetime.door_keypad_2_date_start
-      - input_datetime.door_keypad_2_date_end
-      - input_boolean.door_keypad_2_front_switch
-      - input_boolean.door_keypad_2_back_switch
-      - script.door_keypad_2_delete
-  door_keypad_3:
-    control: hidden
-    name: Entry Code 3
-    entities:
-      - input_text.door_keypad_3_name
-      - input_text.door_keypad_3_code
-      - input_select.door_keypad_3_access_schedule
-      - input_datetime.door_keypad_3_date_start
-      - input_datetime.door_keypad_3_date_end
-      - input_boolean.door_keypad_3_front_switch
-      - input_boolean.door_keypad_3_back_switch
-      - script.door_keypad_3_delete
-  door_keypad_4:
-    control: hidden
-    name: Entry Code 4
-    entities:
-      - input_text.door_keypad_4_name
-      - input_text.door_keypad_4_code
-      - input_select.door_keypad_4_access_schedule
-      - input_datetime.door_keypad_4_date_start
-      - input_datetime.door_keypad_4_date_end
-      - input_boolean.door_keypad_4_front_switch
-      - input_boolean.door_keypad_4_back_switch
-      - script.door_keypad_4_delete
-  door_keypad_5:
-    control: hidden
-    name: Entry Code 5
-    entities:
-      - input_text.door_keypad_5_name
-      - input_text.door_keypad_5_code
-      - input_select.door_keypad_5_access_schedule
-      - input_datetime.door_keypad_5_date_start
-      - input_datetime.door_keypad_5_date_end
-      - input_boolean.door_keypad_5_front_switch
-      - input_boolean.door_keypad_5_back_switch
-      - script.door_keypad_5_delete
-  door_keypad_6:
-    control: hidden
-    name: Entry Code 6
-    entities:
-      - input_text.door_keypad_6_name
-      - input_text.door_keypad_6_code
-      - input_select.door_keypad_6_access_schedule
-      - input_datetime.door_keypad_6_date_start
-      - input_datetime.door_keypad_6_date_end
-      - input_boolean.door_keypad_6_front_switch
-      - input_boolean.door_keypad_6_back_switch
-      - script.door_keypad_6_delete
-  door_keypad_7:
-    control: hidden
-    name: Entry Code 7
-    entities:
-      - input_text.door_keypad_7_name
-      - input_text.door_keypad_7_code
-      - input_select.door_keypad_7_access_schedule
-      - input_datetime.door_keypad_7_date_start
-      - input_datetime.door_keypad_7_date_end
-      - input_boolean.door_keypad_7_front_switch
-      - input_boolean.door_keypad_7_back_switch
-      - script.door_keypad_7_delete
-  door_keypad_8:
-    control: hidden
-    name: Entry Code 8
-    entities:
-      - input_text.door_keypad_8_name
-      - input_text.door_keypad_8_code
-      - input_select.door_keypad_8_access_schedule
-      - input_datetime.door_keypad_8_date_start
-      - input_datetime.door_keypad_8_date_end
-      - input_boolean.door_keypad_8_front_switch
-      - input_boolean.door_keypad_8_back_switch
-      - script.door_keypad_8_delete
-  door_keypad_9:
-    control: hidden
-    name: Entry Code 9
-    entities:
-      - input_text.door_keypad_9_name
-      - input_text.door_keypad_9_code
-      - input_select.door_keypad_9_access_schedule
-      - input_datetime.door_keypad_9_date_start
-      - input_datetime.door_keypad_9_date_end
-      - input_boolean.door_keypad_9_front_switch
-      - input_boolean.door_keypad_9_back_switch
-      - script.door_keypad_9_delete
-  door_keypad_10:
-    control: hidden
-    name: Entry Code 10
-    entities:
-      - input_text.door_keypad_10_name
-      - input_text.door_keypad_10_code
-      - input_select.door_keypad_10_access_schedule
-      - input_datetime.door_keypad_10_date_start
-      - input_datetime.door_keypad_10_date_end
-      - input_boolean.door_keypad_10_front_switch
-      - input_boolean.door_keypad_10_back_switch
-      - script.door_keypad_10_delete
-
-  door_keypad_11:
-    control: hidden
-    name: Entry Code 11
-    entities:
-      - input_text.door_keypad_11_name
-      - input_text.door_keypad_11_code
-      - input_select.door_keypad_11_access_schedule
-      - input_datetime.door_keypad_11_date_start
-      - input_datetime.door_keypad_11_date_end
-      - input_boolean.door_keypad_11_front_switch
-      - input_boolean.door_keypad_11_back_switch
-      - script.door_keypad_11_delete
-  door_keypad_12:
-    control: hidden
-    name: Entry Code 12
-    entities:
-      - input_text.door_keypad_12_name
-      - input_text.door_keypad_12_code
-      - input_select.door_keypad_12_access_schedule
-      - input_datetime.door_keypad_12_date_start
-      - input_datetime.door_keypad_12_date_end
-      - input_boolean.door_keypad_12_front_switch
-      - input_boolean.door_keypad_12_back_switch
-      - script.door_keypad_12_delete
-  door_keypad_13:
-    control: hidden
-    name: Entry Code 13
-    entities:
-      - input_text.door_keypad_13_name
-      - input_text.door_keypad_13_code
-      - input_select.door_keypad_13_access_schedule
-      - input_datetime.door_keypad_13_date_start
-      - input_datetime.door_keypad_13_date_end
-      - input_boolean.door_keypad_13_front_switch
-      - input_boolean.door_keypad_13_back_switch
-      - script.door_keypad_13_delete
-  door_keypad_14:
-    control: hidden
-    name: Entry Code 14
-    entities:
-      - input_text.door_keypad_14_name
-      - input_text.door_keypad_14_code
-      - input_select.door_keypad_14_access_schedule
-      - input_datetime.door_keypad_14_date_start
-      - input_datetime.door_keypad_14_date_end
-      - input_boolean.door_keypad_14_front_switch
-      - input_boolean.door_keypad_14_back_switch
-      - script.door_keypad_14_delete
-  door_keypad_15:
-    control: hidden
-    name: Entry Code 15
-    entities:
-      - input_text.door_keypad_15_name
-      - input_text.door_keypad_15_code
-      - input_select.door_keypad_15_access_schedule
-      - input_datetime.door_keypad_15_date_start
-      - input_datetime.door_keypad_15_date_end
-      - input_boolean.door_keypad_15_front_switch
-      - input_boolean.door_keypad_15_back_switch
-      - script.door_keypad_15_delete
-  door_keypad_16:
-    control: hidden
-    name: One Time Use Code 1
-    entities:
-      - input_select.door_keypad_16_access_schedule
-      - input_text.door_keypad_16_name
-      - input_text.door_keypad_16_code
-      - input_boolean.door_keypad_16_front_switch
-      - input_boolean.door_keypad_16_back_switch
-      - script.door_keypad_16_delete
-  door_keypad_17:
-    control: hidden
-    name: One Time Use Code 2
-    entities:
-      - input_select.door_keypad_17_access_schedule
-      - input_text.door_keypad_17_name
-      - input_text.door_keypad_17_code
-      - input_boolean.door_keypad_17_front_switch
-      - input_boolean.door_keypad_17_back_switch
-      - script.door_keypad_17_delete
-  door_keypad_18:
-    control: hidden
-    name: One Time Use Code 3
-    entities:
-      - input_select.door_keypad_18_access_schedule
-      - input_text.door_keypad_18_name
-      - input_text.door_keypad_18_code
-      - input_boolean.door_keypad_18_front_switch
-      - input_boolean.door_keypad_18_back_switch
-      - script.door_keypad_18_delete
 
 input_text:
   door_keypad_1_name:
@@ -835,68 +457,12 @@ input_text:
   door_keypad_6_code:
     name: Code
     pattern: '[0-9]*'
-  door_keypad_7_name:
-    name: Name
-  door_keypad_7_code:
-    name: Code
-    pattern: '[0-9]*'
-  door_keypad_8_name:
-    name: Name
-  door_keypad_8_code:
-    name: Code
-    pattern: '[0-9]*'
-  door_keypad_9_name:
-    name: Name
-  door_keypad_9_code:
-    name: Code
-    pattern: '[0-9]*'
-  door_keypad_10_name:
-    name: Name
-  door_keypad_10_code:
-    name: Code
-    pattern: '[0-9]*'
-  door_keypad_11_name:
-    name: Name
-  door_keypad_11_code:
-    name: Code
-    pattern: '[0-9]*'
-  door_keypad_12_name:
-    name: Name
-  door_keypad_12_code:
-    name: Code
-    pattern: '[0-9]*'
-  door_keypad_13_name:
-    name: Name
-  door_keypad_13_code:
-    name: Code
-    pattern: '[0-9]*'
-  door_keypad_14_name:
-    name: Name
-  door_keypad_14_code:
-    name: Code
-    pattern: '[0-9]*'
-  door_keypad_15_name:
-    name: Name
-  door_keypad_15_code:
-    name: Code
-    pattern: '[0-9]*'
-  door_keypad_16_name:
-    name: Name
-  door_keypad_16_code:
-    name: Code
-    pattern: '[0-9]*'
-  door_keypad_17_name:
-    name: Name
-  door_keypad_17_code:
-    name: Code
-    pattern: '[0-9]*'
-  door_keypad_18_name:
-    name: Name
-  door_keypad_18_code:
-    name: Code
-    pattern: '[0-9]*'
-  last_person_to_unlock:
-    name: Name
+
+
+  front_door_code:
+    name: Last Person to Unlock Front Door with Keypad
+  back_door_code:
+    name: Last Person to Unlock Back Door with Keypad
 
 input_select:
   door_keypad_1_access_schedule:
@@ -930,60 +496,6 @@ input_select:
       - Recurring
       - Temporary
   door_keypad_6_access_schedule:
-    name: Access Schedule
-    options:
-      - Always
-      - Recurring
-      - Temporary
-  door_keypad_7_access_schedule:
-    name: Access Schedule
-    options:
-      - Always
-      - Recurring
-      - Temporary
-  door_keypad_8_access_schedule:
-    name: Access Schedule
-    options:
-      - Always
-      - Recurring
-      - Temporary
-  door_keypad_9_access_schedule:
-    name: Access Schedule
-    options:
-      - Always
-      - Recurring
-      - Temporary
-  door_keypad_10_access_schedule:
-    name: Access Schedule
-    options:
-      - Always
-      - Recurring
-      - Temporary
-  door_keypad_11_access_schedule:
-    name: Access Schedule
-    options:
-      - Always
-      - Recurring
-      - Temporary
-  door_keypad_12_access_schedule:
-    name: Access Schedule
-    options:
-      - Always
-      - Recurring
-      - Temporary
-  door_keypad_13_access_schedule:
-    name: Access Schedule
-    options:
-      - Always
-      - Recurring
-      - Temporary
-  door_keypad_14_access_schedule:
-    name: Access Schedule
-    options:
-      - Always
-      - Recurring
-      - Temporary
-  door_keypad_15_access_schedule:
     name: Access Schedule
     options:
       - Always
@@ -1152,6 +664,7 @@ input_select:
           - 6
           - 7
           - 8
+      
 input_datetime:
   door_keypad_1_date_start:
     name: Start Time
@@ -1201,78 +714,7 @@ input_datetime:
     name: End Time
     has_date: true
     has_time: true
-  door_keypad_7_date_start:
-    name: Start Time
-    has_date: true
-    has_time: true
-  door_keypad_7_date_end:
-    name: End Time
-    has_date: true
-    has_time: true
-  door_keypad_8_date_start:
-    name: Start Time
-    has_date: true
-    has_time: true
-  door_keypad_8_date_end:
-    name: End Time
-    has_date: true
-    has_time: true
-  door_keypad_9_date_start:
-    name: Start Time
-    has_date: true
-    has_time: true
-  door_keypad_9_date_end:
-    name: End Time
-    has_date: true
-    has_time: true
-  door_keypad_10_date_start:
-    name: Start Time
-    has_date: true
-    has_time: true
-  door_keypad_10_date_end:
-    name: End Time
-    has_date: true
-    has_time: true
-  door_keypad_11_date_start:
-    name: Start Time
-    has_date: true
-    has_time: true
-  door_keypad_11_date_end:
-    name: End Time
-    has_date: true
-    has_time: true
-  door_keypad_12_date_start:
-    name: Start Time
-    has_date: true
-    has_time: true
-  door_keypad_12_date_end:
-    name: End Time
-    has_date: true
-    has_time: true
-  door_keypad_13_date_start:
-    name: Start Time
-    has_date: true
-    has_time: true
-  door_keypad_13_date_end:
-    name: End Time
-    has_date: true
-    has_time: true
-  door_keypad_14_date_start:
-    name: Start Time
-    has_date: true
-    has_time: true
-  door_keypad_14_date_end:
-    name: End Time
-    has_date: true
-    has_time: true
-  door_keypad_15_date_start:
-    name: Start Time
-    has_date: true
-    has_time: true
-  door_keypad_15_date_end:
-    name: End Time
-    has_date: true
-    has_time: true
+  
 
 input_boolean:
   door_keypad_1_front_switch:
@@ -1298,54 +740,6 @@ input_boolean:
   door_keypad_6_front_switch:
     name: Front Door
   door_keypad_6_back_switch:
-    name: Back Door
-  door_keypad_7_front_switch:
-    name: Front Door
-  door_keypad_7_back_switch:
-    name: Back Door
-  door_keypad_8_front_switch:
-    name: Front Door
-  door_keypad_8_back_switch:
-    name: Back Door
-  door_keypad_9_front_switch:
-    name: Front Door
-  door_keypad_9_back_switch:
-    name: Back Door
-  door_keypad_10_front_switch:
-    name: Front Door
-  door_keypad_10_back_switch:
-    name: Back Door
-  door_keypad_11_front_switch:
-    name: Front Door
-  door_keypad_11_back_switch:
-    name: Back Door
-  door_keypad_12_front_switch:
-    name: Front Door
-  door_keypad_12_back_switch:
-    name: Back Door
-  door_keypad_13_front_switch:
-    name: Front Door
-  door_keypad_13_back_switch:
-    name: Back Door
-  door_keypad_14_front_switch:
-    name: Front Door
-  door_keypad_14_back_switch:
-    name: Back Door
-  door_keypad_15_front_switch:
-    name: Front Door
-  door_keypad_15_back_switch:
-    name: Back Door
-  door_keypad_16_front_switch:
-    name: Front Door
-  door_keypad_16_back_switch:
-    name: Back Door
-  door_keypad_17_front_switch:
-    name: Front Door
-  door_keypad_17_back_switch:
-    name: Back Door
-  door_keypad_18_front_switch:
-    name: Front Door
-  door_keypad_18_back_switch:
     name: Back Door
 
 script:
@@ -1469,245 +863,7 @@ script:
       - input_boolean.door_keypad_6_front_switch
       - input_boolean.door_keypad_6_back_switch
 
-  door_keypad_7_delete:
-    alias: Delete Door Code 7
-    sequence:
-    - service: input_text.set_value
-      data:
-        value: ''
-        entity_id: input_text.door_keypad_7_name
-    - service: input_text.set_value
-      data:
-        value: ''
-        entity_id: input_text.door_keypad_7_code
-    - service: input_select.select_option
-      data:
-        option: 'Always'
-        entity_id: input_select.door_keypad_7_access_schedule
-    - service: input_boolean.turn_off
-      entity_id:
-      - input_boolean.door_keypad_7_front_switch
-      - input_boolean.door_keypad_7_back_switch
-
-  door_keypad_8_delete:
-    alias: Delete Door Code 8
-    sequence:
-    - service: input_text.set_value
-      data:
-        value: ''
-        entity_id: input_text.door_keypad_8_name
-    - service: input_text.set_value
-      data:
-        value: ''
-        entity_id: input_text.door_keypad_8_code
-    - service: input_select.select_option
-      data:
-        option: 'Always'
-        entity_id: input_select.door_keypad_8_access_schedule
-    - service: input_boolean.turn_off
-      entity_id:
-      - input_boolean.door_keypad_8_front_switch
-      - input_boolean.door_keypad_8_back_switch
-
-  door_keypad_9_delete:
-    alias: Delete Door Code 9
-    sequence:
-    - service: input_text.set_value
-      data:
-        value: ''
-        entity_id: input_text.door_keypad_9_name
-    - service: input_text.set_value
-      data:
-        value: ''
-        entity_id: input_text.door_keypad_9_code
-    - service: input_select.select_option
-      data:
-        option: 'Always'
-        entity_id: input_select.door_keypad_9_access_schedule
-    - service: input_boolean.turn_off
-      entity_id:
-      - input_boolean.door_keypad_9_front_switch
-      - input_boolean.door_keypad_9_back_switch
-
-  door_keypad_10_delete:
-    alias: Delete Door Code 10
-    sequence:
-    - service: input_text.set_value
-      data:
-        value: ''
-        entity_id: input_text.door_keypad_10_name
-    - service: input_text.set_value
-      data:
-        value: ''
-        entity_id: input_text.door_keypad_10_code
-    - service: input_select.select_option
-      data:
-        option: 'Always'
-        entity_id: input_select.door_keypad_10_access_schedule
-    - service: input_boolean.turn_off
-      entity_id:
-      - input_boolean.door_keypad_10_front_switch
-      - input_boolean.door_keypad_10_back_switch
-
-  door_keypad_11_delete:
-    alias: Delete Door Code 11
-    sequence:
-    - service: input_text.set_value
-      data:
-        value: ''
-        entity_id: input_text.door_keypad_11_name
-    - service: input_text.set_value
-      data:
-        value: ''
-        entity_id: input_text.door_keypad_11_code
-    - service: input_select.select_option
-      data:
-        option: 'Always'
-        entity_id: input_select.door_keypad_11_access_schedule
-    - service: input_boolean.turn_off
-      entity_id:
-      - input_boolean.door_keypad_11_front_switch
-      - input_boolean.door_keypad_11_back_switch
-
-  door_keypad_12_delete:
-    alias: Delete Door Code 12
-    sequence:
-    - service: input_text.set_value
-      data:
-        value: ''
-        entity_id: input_text.door_keypad_12_name
-    - service: input_text.set_value
-      data:
-        value: ''
-        entity_id: input_text.door_keypad_12_code
-    - service: input_select.select_option
-      data:
-        option: 'Always'
-        entity_id: input_select.door_keypad_12_access_schedule
-    - service: input_boolean.turn_off
-      entity_id:
-      - input_boolean.door_keypad_12_front_switch
-      - input_boolean.door_keypad_12_back_switch
-
-  door_keypad_13_delete:
-    alias: Delete Door Code 13
-    sequence:
-    - service: input_text.set_value
-      data:
-        value: ''
-        entity_id: input_text.door_keypad_13_name
-    - service: input_text.set_value
-      data:
-        value: ''
-        entity_id: input_text.door_keypad_13_code
-    - service: input_select.select_option
-      data:
-        option: 'Always'
-        entity_id: input_select.door_keypad_13_access_schedule
-    - service: input_boolean.turn_off
-      entity_id:
-      - input_boolean.door_keypad_13_front_switch
-      - input_boolean.door_keypad_13_back_switch
-
-  door_keypad_14_delete:
-    alias: Delete Door Code 14
-    sequence:
-    - service: input_text.set_value
-      data:
-        value: ''
-        entity_id: input_text.door_keypad_14_name
-    - service: input_text.set_value
-      data:
-        value: ''
-        entity_id: input_text.door_keypad_14_code
-    - service: input_select.select_option
-      data:
-        option: 'Always'
-        entity_id: input_select.door_keypad_14_access_schedule
-    - service: input_boolean.turn_off
-      entity_id:
-      - input_boolean.door_keypad_14_front_switch
-      - input_boolean.door_keypad_14_back_switch
-
-  door_keypad_15_delete:
-    alias: Delete Door Code 15
-    sequence:
-    - service: input_text.set_value
-      data:
-        value: ''
-        entity_id: input_text.door_keypad_15_name
-    - service: input_text.set_value
-      data:
-        value: ''
-        entity_id: input_text.door_keypad_15_code
-    - service: input_select.select_option
-      data:
-        option: 'Always'
-        entity_id: input_select.door_keypad_15_access_schedule
-    - service: input_boolean.turn_off
-      entity_id:
-      - input_boolean.door_keypad_15_front_switch
-      - input_boolean.door_keypad_15_back_switch
-
-  door_keypad_16_delete:
-    alias: Delete Door Code 16
-    sequence:
-    - service: input_text.set_value
-      data:
-        value: ''
-        entity_id: input_text.door_keypad_16_name
-    - service: input_text.set_value
-      data:
-        value: ''
-        entity_id: input_text.door_keypad_16_code
-    - service: input_select.select_option
-      data:
-        option: 'Disabled'
-        entity_id: input_select.door_keypad_16_access_schedule
-    - service: input_boolean.turn_off
-      entity_id:
-      - input_boolean.door_keypad_16_front_switch
-      - input_boolean.door_keypad_16_back_switch
-
-  door_keypad_17_delete:
-    alias: Delete Door Code 17
-    sequence:
-    - service: input_text.set_value
-      data:
-        value: ''
-        entity_id: input_text.door_keypad_17_name
-    - service: input_text.set_value
-      data:
-        value: ''
-        entity_id: input_text.door_keypad_17_code
-    - service: input_select.select_option
-      data:
-        option: 'Disabled'
-        entity_id: input_select.door_keypad_17_access_schedule
-    - service: input_boolean.turn_off
-      entity_id:
-      - input_boolean.door_keypad_17_front_switch
-      - input_boolean.door_keypad_17_back_switch
-
-  door_keypad_18_delete:
-    alias: Delete Door Code 18
-    sequence:
-    - service: input_text.set_value
-      data:
-        value: ''
-        entity_id: input_text.door_keypad_18_name
-    - service: input_text.set_value
-      data:
-        value: ''
-        entity_id: input_text.door_keypad_18_code
-    - service: input_select.select_option
-      data:
-        option: 'Disabled'
-        entity_id: input_select.door_keypad_18_access_schedule
-    - service: input_boolean.turn_off
-      entity_id:
-      - input_boolean.door_keypad_18_front_switch
-      - input_boolean.door_keypad_18_back_switch
+  
 
 sensor:
   - platform: template
@@ -1715,274 +871,114 @@ sensor:
 
       keypad_1_temp_lock_turn_on:
         friendly_name: Turn keypad 1 on
-        entity_id: sensor.date__time
+        entity_id: sensor.date_time
         value_template: >-
           {% set input = states['input_datetime']['door_keypad_1_date_start'] %}
-          {% set time_now = states['sensor']['date__time'].state | replace(',', '') ~ ':00' %}
+          {% set time_now = states['sensor']['date_time'].state | replace(',', '') ~ ':00' %}
           {% set access_schedule = states['input_select']['door_keypad_1_access_schedule'].state %}
           {{ (access_schedule == 'Temporary' or access_schedule == 'Recurring') and input.state == time_now }}
 
       keypad_2_temp_lock_turn_on:
         friendly_name: Turn keypad 2 on
-        entity_id: sensor.date__time
+        entity_id: sensor.date_time
         value_template: >-
           {% set input = states['input_datetime']['door_keypad_2_date_start'] %}
-          {% set time_now = states['sensor']['date__time'].state | replace(',', '') ~ ':00' %}
+          {% set time_now = states['sensor']['date_time'].state | replace(',', '') ~ ':00' %}
           {% set access_schedule = states['input_select']['door_keypad_2_access_schedule'].state %}
           {{ (access_schedule == 'Temporary' or access_schedule == 'Recurring') and input.state == time_now }}
 
       keypad_3_temp_lock_turn_on:
         friendly_name: Turn keypad 3 on
-        entity_id: sensor.date__time
+        entity_id: sensor.date_time
         value_template: >-
           {% set input = states['input_datetime']['door_keypad_3_date_start'] %}
-          {% set time_now = states['sensor']['date__time'].state | replace(',', '') ~ ':00' %}
+          {% set time_now = states['sensor']['date_time'].state | replace(',', '') ~ ':00' %}
           {% set access_schedule = states['input_select']['door_keypad_3_access_schedule'].state %}
           {{ (access_schedule == 'Temporary' or access_schedule == 'Recurring') and input.state == time_now }}
 
       keypad_4_temp_lock_turn_on:
         friendly_name: Turn keypad 4 on
-        entity_id: sensor.date__time
+        entity_id: sensor.date_time
         value_template: >-
           {% set input = states['input_datetime']['door_keypad_4_date_start'] %}
-          {% set time_now = states['sensor']['date__time'].state | replace(',', '') ~ ':00' %}
+          {% set time_now = states['sensor']['date_time'].state | replace(',', '') ~ ':00' %}
           {% set access_schedule = states['input_select']['door_keypad_4_access_schedule'].state %}
           {{ (access_schedule == 'Temporary' or access_schedule == 'Recurring') and input.state == time_now }}
 
       keypad_5_temp_lock_turn_on:
         friendly_name: Turn keypad 5 on
-        entity_id: sensor.date__time
+        entity_id: sensor.date_time
         value_template: >-
           {% set input = states['input_datetime']['door_keypad_5_date_start'] %}
-          {% set time_now = states['sensor']['date__time'].state | replace(',', '') ~ ':00' %}
+          {% set time_now = states['sensor']['date_time'].state | replace(',', '') ~ ':00' %}
           {% set access_schedule = states['input_select']['door_keypad_5_access_schedule'].state %}
           {{ (access_schedule == 'Temporary' or access_schedule == 'Recurring') and input.state == time_now }}
 
       keypad_6_temp_lock_turn_on:
         friendly_name: Turn keypad 6 on
-        entity_id: sensor.date__time
+        entity_id: sensor.date_time
         value_template: >-
           {% set input = states['input_datetime']['door_keypad_6_date_start'] %}
-          {% set time_now = states['sensor']['date__time'].state | replace(',', '') ~ ':00' %}
+          {% set time_now = states['sensor']['date_time'].state | replace(',', '') ~ ':00' %}
           {% set access_schedule = states['input_select']['door_keypad_6_access_schedule'].state %}
           {{ (access_schedule == 'Temporary' or access_schedule == 'Recurring') and input.state == time_now }}
 
-      keypad_7_temp_lock_turn_on:
-        friendly_name: Turn keypad 7 on
-        entity_id: sensor.date__time
-        value_template: >-
-          {% set input = states['input_datetime']['door_keypad_7_date_start'] %}
-          {% set time_now = states['sensor']['date__time'].state | replace(',', '') ~ ':00' %}
-          {% set access_schedule = states['input_select']['door_keypad_7_access_schedule'].state %}
-          {{ (access_schedule == 'Temporary' or access_schedule == 'Recurring') and input.state == time_now }}
-
-      keypad_8_temp_lock_turn_on:
-        friendly_name: Turn keypad 8 on
-        entity_id: sensor.date__time
-        value_template: >-
-          {% set input = states['input_datetime']['door_keypad_8_date_start'] %}
-          {% set time_now = states['sensor']['date__time'].state | replace(',', '') ~ ':00' %}
-          {% set access_schedule = states['input_select']['door_keypad_8_access_schedule'].state %}
-          {{ (access_schedule == 'Temporary' or access_schedule == 'Recurring') and input.state == time_now }}
-
-      keypad_9_temp_lock_turn_on:
-        friendly_name: Turn keypad 9 on
-        entity_id: sensor.date__time
-        value_template: >-
-          {% set input = states['input_datetime']['door_keypad_9_date_start'] %}
-          {% set time_now = states['sensor']['date__time'].state | replace(',', '') ~ ':00' %}
-          {% set access_schedule = states['input_select']['door_keypad_9_access_schedule'].state %}
-          {{ (access_schedule == 'Temporary' or access_schedule == 'Recurring') and input.state == time_now }}
-
-      keypad_10_temp_lock_turn_on:
-        friendly_name: Turn keypad 10 on
-        entity_id: sensor.date__time
-        value_template: >-
-          {% set input = states['input_datetime']['door_keypad_10_date_start'] %}
-          {% set time_now = states['sensor']['date__time'].state | replace(',', '') ~ ':00' %}
-          {% set access_schedule = states['input_select']['door_keypad_10_access_schedule'].state %}
-          {{ (access_schedule == 'Temporary' or access_schedule == 'Recurring') and input.state == time_now }}
-
-      keypad_11_temp_lock_turn_on:
-        friendly_name: Turn keypad 11 on
-        entity_id: sensor.date__time
-        value_template: >-
-          {% set input = states['input_datetime']['door_keypad_11_date_start'] %}
-          {% set time_now = states['sensor']['date__time'].state | replace(',', '') ~ ':00' %}
-          {% set access_schedule = states['input_select']['door_keypad_11_access_schedule'].state %}
-          {{ (access_schedule == 'Temporary' or access_schedule == 'Recurring') and input.state == time_now }}
-
-      keypad_12_temp_lock_turn_on:
-        friendly_name: Turn keypad 12 on
-        entity_id: sensor.date__time
-        value_template: >-
-          {% set input = states['input_datetime']['door_keypad_12_date_start'] %}
-          {% set time_now = states['sensor']['date__time'].state | replace(',', '') ~ ':00' %}
-          {% set access_schedule = states['input_select']['door_keypad_12_access_schedule'].state %}
-          {{ (access_schedule == 'Temporary' or access_schedule == 'Recurring') and input.state == time_now }}
-
-      keypad_13_temp_lock_turn_on:
-        friendly_name: Turn keypad 13 on
-        entity_id: sensor.date__time
-        value_template: >-
-          {% set input = states['input_datetime']['door_keypad_13_date_start'] %}
-          {% set time_now = states['sensor']['date__time'].state | replace(',', '') ~ ':00' %}
-          {% set access_schedule = states['input_select']['door_keypad_13_access_schedule'].state %}
-          {{ (access_schedule == 'Temporary' or access_schedule == 'Recurring') and input.state == time_now }}
-
-      keypad_14_temp_lock_turn_on:
-        friendly_name: Turn keypad 14 on
-        entity_id: sensor.date__time
-        value_template: >-
-          {% set input = states['input_datetime']['door_keypad_14_date_start'] %}
-          {% set time_now = states['sensor']['date__time'].state | replace(',', '') ~ ':00' %}
-          {% set access_schedule = states['input_select']['door_keypad_14_access_schedule'].state %}
-          {{ (access_schedule == 'Temporary' or access_schedule == 'Recurring') and input.state == time_now }}
-
-      keypad_15_temp_lock_turn_on:
-        friendly_name: Turn keypad 15 on
-        entity_id: sensor.date__time
-        value_template: >-
-          {% set input = states['input_datetime']['door_keypad_15_date_start'] %}
-          {% set time_now = states['sensor']['date__time'].state | replace(',', '') ~ ':00' %}
-          {% set access_schedule = states['input_select']['door_keypad_15_access_schedule'].state %}
-          {{ (access_schedule == 'Temporary' or access_schedule == 'Recurring') and input.state == time_now }}
-
+     
       keypad_1_temp_lock_turn_off:
         friendly_name: Turn keypad 1 off
-        entity_id: sensor.date__time
+        entity_id: sensor.date_time
         value_template: >-
           {% set input = states['input_datetime']['door_keypad_1_date_end'] %}
-          {% set time_now = states['sensor']['date__time'].state | replace(',', '') ~ ':00' %}
+          {% set time_now = states['sensor']['date_time'].state | replace(',', '') ~ ':00' %}
           {% set access_schedule = states['input_select']['door_keypad_1_access_schedule'].state %}
           {{ (access_schedule == 'Temporary' or access_schedule == 'Recurring') and input.state == time_now }}
 
       keypad_2_temp_lock_turn_off:
         friendly_name: Turn keypad 2 off
-        entity_id: sensor.date__time
+        entity_id: sensor.date_time
         value_template: >-
           {% set input = states['input_datetime']['door_keypad_2_date_end'] %}
-          {% set time_now = states['sensor']['date__time'].state | replace(',', '') ~ ':00' %}
+          {% set time_now = states['sensor']['date_time'].state | replace(',', '') ~ ':00' %}
           {% set access_schedule = states['input_select']['door_keypad_2_access_schedule'].state %}
           {{ (access_schedule == 'Temporary' or access_schedule == 'Recurring') and input.state == time_now }}
 
       keypad_3_temp_lock_turn_off:
         friendly_name: Turn keypad 3 off
-        entity_id: sensor.date__time
+        entity_id: sensor.date_time
         value_template: >-
           {% set input = states['input_datetime']['door_keypad_3_date_end'] %}
-          {% set time_now = states['sensor']['date__time'].state | replace(',', '') ~ ':00' %}
+          {% set time_now = states['sensor']['date_time'].state | replace(',', '') ~ ':00' %}
           {% set access_schedule = states['input_select']['door_keypad_3_access_schedule'].state %}
           {{ (access_schedule == 'Temporary' or access_schedule == 'Recurring') and input.state == time_now }}
 
       keypad_4_temp_lock_turn_off:
         friendly_name: Turn keypad 4 off
-        entity_id: sensor.date__time
+        entity_id: sensor.date_time
         value_template: >-
           {% set input = states['input_datetime']['door_keypad_4_date_end'] %}
-          {% set time_now = states['sensor']['date__time'].state | replace(',', '') ~ ':00' %}
+          {% set time_now = states['sensor']['date_time'].state | replace(',', '') ~ ':00' %}
           {% set access_schedule = states['input_select']['door_keypad_4_access_schedule'].state %}
           {{ (access_schedule == 'Temporary' or access_schedule == 'Recurring') and input.state == time_now }}
 
       keypad_5_temp_lock_turn_off:
         friendly_name: Turn keypad 5 off
-        entity_id: sensor.date__time
+        entity_id: sensor.date_time
         value_template: >-
           {% set input = states['input_datetime']['door_keypad_5_date_end'] %}
-          {% set time_now = states['sensor']['date__time'].state | replace(',', '') ~ ':00' %}
+          {% set time_now = states['sensor']['date_time'].state | replace(',', '') ~ ':00' %}
           {% set access_schedule = states['input_select']['door_keypad_5_access_schedule'].state %}
           {{ (access_schedule == 'Temporary' or access_schedule == 'Recurring') and input.state == time_now }}
 
       keypad_6_temp_lock_turn_off:
         friendly_name: Turn keypad 6 off
-        entity_id: sensor.date__time
+        entity_id: sensor.date_time
         value_template: >-
           {% set input = states['input_datetime']['door_keypad_6_date_end'] %}
-          {% set time_now = states['sensor']['date__time'].state | replace(',', '') ~ ':00' %}
+          {% set time_now = states['sensor']['date_time'].state | replace(',', '') ~ ':00' %}
           {% set access_schedule = states['input_select']['door_keypad_6_access_schedule'].state %}
           {{ (access_schedule == 'Temporary' or access_schedule == 'Recurring') and input.state == time_now }}
 
-      keypad_7_temp_lock_turn_off:
-        friendly_name: Turn keypad 7 off
-        entity_id: sensor.date__time
-        value_template: >-
-          {% set input = states['input_datetime']['door_keypad_7_date_end'] %}
-          {% set time_now = states['sensor']['date__time'].state | replace(',', '') ~ ':00' %}
-          {% set access_schedule = states['input_select']['door_keypad_7_access_schedule'].state %}
-          {{ (access_schedule == 'Temporary' or access_schedule == 'Recurring') and input.state == time_now }}
-
-      keypad_8_temp_lock_turn_off:
-        friendly_name: Turn keypad 8 off
-        entity_id: sensor.date__time
-        value_template: >-
-          {% set input = states['input_datetime']['door_keypad_8_date_end'] %}
-          {% set time_now = states['sensor']['date__time'].state | replace(',', '') ~ ':00' %}
-          {% set access_schedule = states['input_select']['door_keypad_8_access_schedule'].state %}
-          {{ (access_schedule == 'Temporary' or access_schedule == 'Recurring') and input.state == time_now }}
-
-      keypad_9_temp_lock_turn_off:
-        friendly_name: Turn keypad 9 off
-        entity_id: sensor.date__time
-        value_template: >-
-          {% set input = states['input_datetime']['door_keypad_9_date_end'] %}
-          {% set time_now = states['sensor']['date__time'].state | replace(',', '') ~ ':00' %}
-          {% set access_schedule = states['input_select']['door_keypad_9_access_schedule'].state %}
-          {{ (access_schedule == 'Temporary' or access_schedule == 'Recurring') and input.state == time_now }}
-
-      keypad_10_temp_lock_turn_off:
-        friendly_name: Turn keypad 10 off
-        entity_id: sensor.date__time
-        value_template: >-
-          {% set input = states['input_datetime']['door_keypad_10_date_end'] %}
-          {% set time_now = states['sensor']['date__time'].state | replace(',', '') ~ ':00' %}
-          {% set access_schedule = states['input_select']['door_keypad_10_access_schedule'].state %}
-          {{ (access_schedule == 'Temporary' or access_schedule == 'Recurring') and input.state == time_now }}
-
-      keypad_11_temp_lock_turn_off:
-        friendly_name: Turn keypad 11 off
-        entity_id: sensor.date__time
-        value_template: >-
-          {% set input = states['input_datetime']['door_keypad_11_date_end'] %}
-          {% set time_now = states['sensor']['date__time'].state | replace(',', '') ~ ':00' %}
-          {% set access_schedule = states['input_select']['door_keypad_11_access_schedule'].state %}
-          {{ (access_schedule == 'Temporary' or access_schedule == 'Recurring') and input.state == time_now }}
-
-      keypad_12_temp_lock_turn_off:
-        friendly_name: Turn keypad 12 off
-        entity_id: sensor.date__time
-        value_template: >-
-          {% set input = states['input_datetime']['door_keypad_12_date_end'] %}
-          {% set time_now = states['sensor']['date__time'].state | replace(',', '') ~ ':00' %}
-          {% set access_schedule = states['input_select']['door_keypad_12_access_schedule'].state %}
-          {{ (access_schedule == 'Temporary' or access_schedule == 'Recurring') and input.state == time_now }}
-
-      keypad_13_temp_lock_turn_off:
-        friendly_name: Turn keypad 13 off
-        entity_id: sensor.date__time
-        value_template: >-
-          {% set input = states['input_datetime']['door_keypad_13_date_end'] %}
-          {% set time_now = states['sensor']['date__time'].state | replace(',', '') ~ ':00' %}
-          {% set access_schedule = states['input_select']['door_keypad_13_access_schedule'].state %}
-          {{ (access_schedule == 'Temporary' or access_schedule == 'Recurring') and input.state == time_now }}
-
-      keypad_14_temp_lock_turn_off:
-        friendly_name: Turn keypad 14 off
-        entity_id: sensor.date__time
-        value_template: >-
-          {% set input = states['input_datetime']['door_keypad_14_date_end'] %}
-          {% set time_now = states['sensor']['date__time'].state | replace(',', '') ~ ':00' %}
-          {% set access_schedule = states['input_select']['door_keypad_14_access_schedule'].state %}
-          {{ (access_schedule == 'Temporary' or access_schedule == 'Recurring') and input.state == time_now }}
-
-      keypad_15_temp_lock_turn_off:
-        friendly_name: Turn keypad 15 off
-        entity_id: sensor.date__time
-        value_template: >-
-          {% set input = states['input_datetime']['door_keypad_15_date_end'] %}
-          {% set time_now = states['sensor']['date__time'].state | replace(',', '') ~ ':00' %}
-          {% set access_schedule = states['input_select']['door_keypad_15_access_schedule'].state %}
-          {{ (access_schedule == 'Temporary' or access_schedule == 'Recurring') and input.state == time_now }}
-
+     
 # This Sensor uses the alarm type to determine what is happening with the lock.  The codes should be standard across locks
 # but not all locks will use all values. As before make sure the names matches your locks
 
@@ -2031,13 +1027,13 @@ sensor:
             Unknown Alarm Type Value {{ states('sensor.lock_back_door_deadbolt_alarm_type') }}
           {% endif %}
 # This sensor will just be a friendly name of whoever unlocked the door,  Use for other automations if you want.
-      backdoor_code:
-        friendly_name: 'Last Person to unlock with Keypad (Back Door)'
-        value_template: >
-          {% set number = states('sensor.lock_back_door_deadbolt_alarm_level') %}
-          {% set entity_id = 'input_text.door_keypad_' + number + '_name' %}
-          {% set user = 'Master' if number == '0' else states(entity_id) %}
-          {{ user }}
+#      backdoor_code:
+#        friendly_name: 'Last Person to unlock with Keypad (Back Door)'
+#        value_template: >
+#          {% set number = states('sensor.lock_back_door_deadbolt_alarm_level') %}
+#          {% set entity_id = 'input_text.door_keypad_' + number + '_name' %}
+#          {% set user = 'Master' if number == '0' else states(entity_id) %}
+#          {{ user }}
 
       front_door_report:
         friendly_name: 'Front Door Report'
@@ -2084,59 +1080,13 @@ sensor:
             Unknown Alarm Type Value {{ states('sensor.lock_front_door_deadbolt_alarm_type') }}
           {% endif %}
 
-      frontdoor_code:
-        friendly_name: 'Last Person to unlock with Keypad (Front Door)'
-        value_template: >
-          {% set number = states('sensor.lock_front_door_deadbolt_alarm_level') %}
-          {% set entity_id = 'input_text.door_keypad_' + number + '_name' %}
-          {% set user = 'Master' if number == '0' else states(entity_id) %}
-          {{ user }}
-          
-#  Battery info, use your custom name if needed.  Also I had some issues that I thought was related to this
-#  and had this commented out for a while, but it seems to be working well now, so might not be a problem
-#  if you notice any issues, try commenting this out
-      door_lock_batteries_front_door:
-        friendly_name: Front Door Lock Battery Level
-        value_template: "{% if states.zwave.lock_front_door_deadbolt %}
-            {{ states.zwave.lock_front_door_deadbolt.attributes.battery_level }}
-          {% else %}
-            unknown
-          {% endif %}"
-        unit_of_measurement: '%'
-        icon_template: >-
-          {% set battery_level = states('sensor.door_lock_batteries_front_door')|int('unknown') %}
-          {% set battery_round = (battery_level|int / 10)|int * 10 %}
-          {% if battery_level == 'unknown' %}
-            mdi:battery-unknown
-          {% else %}
-            {% if battery_round >= 100 %}
-              mdi:battery
-            {% elif battery_round > 0 %}
-              mdi:battery-{{ battery_round }}
-            {% else %}
-              mdi:battery-alert
-            {% endif %}
-          {% endif %}
+#      frontdoor_code:
+#        friendly_name: 'Last Person to unlock with Keypad (Front Door)'
+#        value_template: >
+#          {% set number = states('sensor.lock_front_door_deadbolt_alarm_level') %}
+#          {% set entity_id = 'input_text.door_keypad_' + number + '_name' %}
+#          {% set user = 'Master' if number == '0' else states(entity_id) %}
+#          {{ user }}
 
-      door_lock_batteries_back_door:
-        friendly_name: Back Door Lock Battery Level
-        value_template: "{% if states.zwave.lock_back_door_deadbolt %}
-            {{ states.zwave.lock_back_door_deadbolt.attributes.battery_level }}
-          {% else %}
-            unknown
-          {% endif %}"
-        unit_of_measurement: '%'
-        icon_template: >-
-          {% set battery_level = states('sensor.door_lock_batteries_back_door')|int('unknown') %}
-          {% set battery_round = (battery_level|int / 10)|int * 10 %}
-          {% if battery_level == 'unknown' %}
-            mdi:battery-unknown
-          {% else %}
-            {% if battery_round >= 100 %}
-              mdi:battery
-            {% elif battery_round > 0 %}
-              mdi:battery-{{ battery_round }}
-            {% else %}
-              mdi:battery-alert
-            {% endif %}
-          {% endif %}
+
+ 
