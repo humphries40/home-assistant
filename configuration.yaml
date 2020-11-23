@@ -54,28 +54,17 @@ map:
 # Track the sun
 sun:
 
-# Weather prediction
-sensor:
-  - platform: yr
-
 # Text to speech
 tts:
   - platform: google_translate
     service_name: google_say
 
-
-#Devices Added
-device_tracker:
-  - platform: eero_tracker
-    consider_home: 300
-    interval_seconds: 60 # Recommended...do not set this lower than 25, we don't want to DDOS Eero
-
 ecobee:
     api_key: !secret ecobeeAPIKey
 
 zwave:
-  usb_path: /dev/ttyACM0
-  network_key: "0xF3, 0x5F, 0x31, 0xB4, 0xA6, 0x22, 0xB8, 0x3F, 0x25, 0x33, 0xCF, 0xE6, 0x89, 0x12, 0x42, 0x76"
+  usb_path: /dev/ttyAMA0
+  network_key: !secret zwave_network_key 
   
 octoprint:
   host: 192.168.7.151
