@@ -83,7 +83,7 @@
     entity_id: lock.lock_front_door_lock        
 
     
-- id: 'lock_after_5_mins_when_after_10pm_or_before_4pm_front_door'
+- id: 'lock_after_5_mins_front_door'
   alias: 'Lock Schedule front door'
   trigger:
     platform: state
